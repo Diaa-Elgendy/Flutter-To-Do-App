@@ -1,9 +1,8 @@
-import 'package:conditional_builder/conditional_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_conditional_rendering/flutter_conditional_rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:todo/shared/components/components.dart';
-
 import 'shared/cubit/cubit.dart';
 import 'shared/cubit/states.dart';
 
@@ -33,10 +32,11 @@ class HomeScreen extends StatelessWidget {
             appBar: AppBar(
               title: Text(cubit.title[cubit.currentIndex]),
             ),
-            body: ConditionalBuilder(
-              condition: state is! AppGetDatabaseLoadingState,
-              builder: (context) => cubit.screens[cubit.currentIndex],
-              fallback: (context) => Center(child: CircularProgressIndicator()),
+            body: Conditional.single(
+              context: context,
+              conditionBuilder: (context) =>  state is! AppGetDatabaseLoadingState,
+              widgetBuilder: (context) => cubit.screens[cubit.currentIndex],
+              fallbackBuilder: (context) => Center(child: CircularProgressIndicator()),
             ),
             floatingActionButton: FloatingActionButton(
               onPressed: () {

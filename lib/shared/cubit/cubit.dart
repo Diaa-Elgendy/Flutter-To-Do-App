@@ -20,11 +20,13 @@ class AppCubit extends Cubit<AppStates> {
     DoneTasksScreen(),
     ArchivedTasksScreen(),
   ];
+
   List<String> title = [
     "New Task",
     "Done Task",
     "Archived Task",
   ];
+
   List<Map> newTasks = [];
   List<Map> doneTasks = [];
   List<Map> archiveTasks = [];
@@ -62,7 +64,7 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   Future insertIntoDatabase(String title, String date, String time) async {
-    return await database.transaction((txn) {
+    return await database.transaction((txn) async{
       txn
           .rawInsert(
               'INSERT INTO tasks (title, date, time, status) VALUES ("$title", "$time", "$date", "new")')
@@ -73,7 +75,6 @@ class AppCubit extends Cubit<AppStates> {
       }).catchError((error) {
         print("Error while inserting record ${error.toString()}");
       });
-
       return null;
     });
   }

@@ -1,6 +1,6 @@
-import 'package:conditional_builder/conditional_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_conditional_rendering/conditional.dart';
 import 'package:todo/shared/components/components.dart';
 
 import 'shared/cubit/cubit.dart';
@@ -11,14 +11,14 @@ class DoneTasksScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
-
         listener: (context, state) {},
         builder: (context, state) {
           var tasks = AppCubit.get(context).doneTasks;
 
-          return ConditionalBuilder(
-            condition: tasks.length > 0,
-            builder: (context) => ListView.separated(
+          return Conditional.single(
+            context: context,
+            conditionBuilder:(context) =>  tasks.length > 0,
+            widgetBuilder: (context) => ListView.separated(
                 itemBuilder: (context, index) => buildTaskItem(tasks[index], context),
                 separatorBuilder: (context, index) => Padding(
                   padding: const EdgeInsetsDirectional.only(start: 20, end: 20),
@@ -29,7 +29,7 @@ class DoneTasksScreen extends StatelessWidget {
                   ),
                 ),
                 itemCount: tasks.length),
-            fallback: (context) => Center(
+            fallbackBuilder: (context) => Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
